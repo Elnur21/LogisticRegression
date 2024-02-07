@@ -2,13 +2,13 @@ from models import LogisticRegression
 import numpy as np
 
 
-num_samples = 10
+num_samples = 1000
 
 # Number of features
-num_features = 5
+num_features = 10
 
 # Number of classes
-num_classes = 5
+num_classes = 2
 
 # Generate random features
 X = np.random.rand(num_samples, num_features)

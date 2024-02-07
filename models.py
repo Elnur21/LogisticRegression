@@ -5,8 +5,8 @@ class LogisticRegression:
         self.learning_rate=learning_rate
         self.num_iterations=num_iterations
     
-    def softmax(self, z):
-        return np.exp(z - np.max(z)) / np.sum(np.exp(z - np.max(z)), keepdims=True)
+    def sigmoid(self, z):
+        return 1/(1+np.exp(-z))
 
     def fit(self,X, Y):
         self.X=X
@@ -18,7 +18,7 @@ class LogisticRegression:
 
         for _i in range(self.num_iterations):
 
-            predicts = self.softmax(np.dot(self.X, self.weights) + self.bias)
+            predicts = self.sigmoid(np.dot(self.X, self.weights) + self.bias)
 
             dw = (1 / m) * np.dot(self.X.T, (predicts - self.Y))
             db = (1 / m) * np.sum(predicts - self.Y)
@@ -31,12 +31,11 @@ class LogisticRegression:
 
 
     def predict(self, X):
-        return self.softmax(np.dot(X, self.weights) + self.bias)
+        results = self.sigmoid(np.dot(X, self.weights) + self.bias)
+        return [1 if predict>0.5 else 0 for predict in results]
 
     def score(self, y_pred, y_true):
-        y_new = self.softmax(y_true)
-        print(y_new)
-        return np.mean(y_new == y_pred) *100
+        return np.mean(y_true == y_pred) *100
 
 
 
