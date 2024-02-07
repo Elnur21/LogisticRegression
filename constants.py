@@ -1,0 +1,1 @@
+PATH_DATA = '/home/elnur/Desktop/UCRArchive_2018'
