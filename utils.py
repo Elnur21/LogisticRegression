@@ -84,5 +84,15 @@ def label_encoder(y):
     return encoded_labels
 
 
-def log(input):
-    print(input)
+class Log:
+    def __init__(self) -> None:
+        pass
+
+    def error(input):
+        print(f"\033[91m {input} \033[00m")
+    
+    def success(input):
+        print(f"\033[92m {input} \033[00m")
+
+    def info(input):
+        print(f"{input}")
