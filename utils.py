@@ -46,6 +46,7 @@ def plot(dataset, labels):
         dataset_df = pd.DataFrame(dataset)
         labels_df = pd.DataFrame(labels, columns=['Label'])
         data_for_each_label = []
+        print(labels_df.value_counts())
 
         for label in labels_df['Label'].unique():
             data_for_each_label.append(
@@ -59,11 +60,10 @@ def plot(dataset, labels):
                 column_name = dataset_df.columns[j]
                 for df in data_for_each_label:
                     data = pd.DataFrame(df).T
-                    axes.arrow(2, 5, 3, 3)
                     axes[j].plot(data.index, data[column_name])
                 axes[j].set_title(f'Time Series {j+1} of {len(data_for_each_label[0])}')
 
         plt.tight_layout()
         plt.show()
     except:
-        print("salam")
+        print("Error")
