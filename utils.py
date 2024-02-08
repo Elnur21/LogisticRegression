@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from matplotlib import pyplot as plt
 
 from constants import PATH_DATA
@@ -45,14 +46,20 @@ def plot(dataset, labels):
     try:
         dataset_df = pd.DataFrame(dataset)
         labels_df = pd.DataFrame(labels, columns=['Label'])
+        sampleLength = dataset_df.shape[1]
         data_for_each_label = []
-        print(labels_df.value_counts())
+        maxClassCount = labels_df.value_counts().max()
 
         for label in labels_df['Label'].unique():
-            data_for_each_label.append(
-                dataset_df[labels_df['Label'] == label].values)
+            classData = dataset_df[labels_df['Label'] == label].values
+            classCount = len(classData)
+            if(classCount<maxClassCount):
+                padding = np.zeros(((maxClassCount-classCount), sampleLength))
+                classData = np.concatenate((classData, padding))
+            data_for_each_label.append(classData)
 
-        num_rows, num_cols = 3, 3
+
+        num_rows, num_cols = 4, 5
         fig, axes = plt.subplots(num_rows, num_cols, figsize=(20, 8))
         axes = axes.flatten()
         for j in range(num_rows * num_cols):
@@ -60,10 +67,18 @@ def plot(dataset, labels):
                 column_name = dataset_df.columns[j]
                 for df in data_for_each_label:
                     data = pd.DataFrame(df).T
-                    axes[j].plot(data.index, data[column_name])
+                    if data[column_name].any():
+                        axes[j].plot(data.index, data[column_name])
                 axes[j].set_title(f'Time Series {j+1} of {len(data_for_each_label[0])}')
 
         plt.tight_layout()
         plt.show()
     except:
         print("Error")
+
+
+def label_encoder(y):
+    unique_labels = np.unique(y)
+    label_map = {label: idx for idx, label in enumerate(unique_labels)}
+    encoded_labels = np.array([label_map[label] for label in y])
+    return encoded_labels
