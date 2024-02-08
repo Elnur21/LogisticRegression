@@ -2,40 +2,49 @@ import numpy as np
 
 class LogisticRegression:
     def __init__(self, learning_rate=0.01, num_iterations=1000):
-        self.learning_rate=learning_rate
-        self.num_iterations=num_iterations
-    
+        self.learning_rate = learning_rate
+        self.num_iterations = num_iterations
+        self.classifiers = []
+
     def sigmoid(self, z):
-        return 1/(1+np.exp(-z))
+        return 1 / (1 + np.exp(-z))
 
-    def fit(self,X, Y):
-        self.X=X
-        self.Y=Y
-        m, features = self.X.shape
+    def fit(self, X, Y):
+        self.X = X
+        self.Y = Y
+        num_samples, num_features = self.X.shape
+        num_classes = len(np.unique(Y))
+        self.classifiers = []
 
-        self.weights = np.zeros(features)
-        self.bias = 0
+        for class_label in range(num_classes):
+            binary_labels = np.where(self.Y == class_label, 1, 0)
 
-        for _i in range(self.num_iterations):
+            self.weights = np.zeros(num_features)
+            self.bias = 0
 
-            predicts = self.sigmoid(np.dot(self.X, self.weights) + self.bias)
+            for _ in range(self.num_iterations):
+                predicts = self.sigmoid(np.dot(self.X, self.weights) + self.bias)
 
-            dw = (1 / m) * np.dot(self.X.T, (predicts - self.Y))
-            db = (1 / m) * np.sum(predicts - self.Y)
+                dw = (1 / num_samples) * np.dot(self.X.T, (predicts - binary_labels))
+                db = (1 / num_samples) * np.sum(predicts - binary_labels)
 
+                self.weights -= self.learning_rate * dw
+                self.bias -= self.learning_rate * db
 
-            self.weights -= self.learning_rate * dw
-            self.bias -= self.learning_rate * db
-            
-
-
+            self.classifiers.append((self.weights, self.bias))
 
     def predict(self, X):
-        results = self.sigmoid(np.dot(X, self.weights) + self.bias)
-        return [1 if predict>0.5 else 0 for predict in results]
+        predictions = []
+        for sample in X:
+            class_scores = []
+            for self.weights, self.bias in self.classifiers:
+                score = np.dot(sample, self.weights) + self.bias
+                class_scores.append(score)
+            predicted_class = np.argmax(class_scores)
+            predictions.append(predicted_class)
+        return np.array(predictions)
 
     def score(self, y_pred, y_true):
-        return np.mean(y_true == y_pred) *100
-
+        return np.mean(y_true == y_pred) * 100
 
 
