@@ -82,3 +82,7 @@ def label_encoder(y):
     label_map = {label: idx for idx, label in enumerate(unique_labels)}
     encoded_labels = np.array([label_map[label] for label in y])
     return encoded_labels
+
+
+def log(input):
+    print(input)
