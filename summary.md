@@ -66,8 +66,29 @@ The mean accuracy over the 10 runs was taken to reduce bias due to weight initia
 The results showed that deep learning models were able to significantly outperform the NN-DTW model and achieve similar results to COTE and HIVE-COTE using a deep residual network architecture.
 
 
+Results:
+-- Results for univariate time series:
+ResNet outperforms FCN on the majority of problems, contrary to initial findings.
+CNNs benefit from their ability to learn spatially invariant features in two-dimensional images, adapting to the natural temporal order in sequential data.
+Methods like MCNN and t-LeNet exhibit low accuracy, possibly due to ad-hoc slicing methods and replacing global average pooling (GAP) with fully connected (FC) layers.
+-- Comparing with state-of-the-art approaches:
+ResNet emerges as the top-performing classifier among nine classifiers, with similar performance to other non-deep TSC algorithms like COTE and HIVE-COTE.
+Fair comparison requires optimization efforts for both deep learning and non-deep learning classifiers.
+-- Results for multivariate time series:
+Deep CNNs (ResNet, FCN, Encoder) outperform Time-CNN and MCDCNN, originally proposed for MTSC.
+Classifier rankings in MTSC are FCN, ResNet, Encoder, Time-CNN, TWIESN, MLP, MCDCNN, MCNN, and t-LeNet.
+-- What can the dataset’s characteristics tell us about the best architecture?
+Characteristics such as time series length and training set size influence model performance.
+ResNet and FCN generally perform well across datasets, while Time-CNN is less prone to overfitting smaller datasets.
+Larger training sets are essential for achieving high accuracies with deep neural networks (DNNs).
+-- Effect of random initializations:
+FCN exhibits less stable performance compared to ResNet, highlighting the challenge of maintaining stability in complex DNNs.
+
+
 Visualisation:
-For visualization CAM is used on GunPoint and Meat datasets to reduce the black-box effect. And MDS is used to gain insights into the spatial distribution of input time series belonging to different classes in the dataset.
+For visualization CAM is used on GunPoint and Meat datasets to reduce the black-box effect.
+CAM requires models with a GAP layer preceding the softmax classifier, enabling visualization of important features used in classification decisions.
+MDS involves calculating pairwise distances between time series examples and projecting them into a 2D space, allowing for visualization and analysis of separability.
 
 
 
