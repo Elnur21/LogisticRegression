@@ -58,8 +58,7 @@ Each algorithm was tested on the whole UCR/UEA archive which contains 85 univari
 The datasets possess different varying characteristics such as the length of the series which has a minimum value of 24 for the ItalyPowerDemand dataset and a maximum equal to 2,709 for the HandOutLines dataset. 
 Note that the time series in this archive are already z-normalized
 -- Multivariate archive:
-
-
+Baydogan’s archive contains 13 MTS classification datasets. This archive also exhibits datasets with different characteristics such as the length of the time series which, unlike the UCR/UEA archive, varies among the same dataset.
 -- Experiments:
 8730 models were trained on 97 datasets (12 datasets are multivariate). 
 The experimental setup involved training nine deep learning models on a cluster of more than 60 GPUs. Each dataset was trained for 10 different runs. 
