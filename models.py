@@ -57,15 +57,14 @@ class LogisticRegression:
 
 
 class MLP:
-    def __init__(self, learning_rate=0.01, num_iterations=1000, num_neurons=3):
+    def __init__(self, learning_rate=0.01, num_iterations=1000, num_neurons=[3, 3]):
         self.learning_rate = learning_rate
         self.num_iterations = num_iterations
         self.num_neurons = num_neurons
         self.classifiers = []
 
     def sigmoid(self, z):
-        z2 = np.max(0, z)
-        return 1 / (1 + np.exp(-z2))
+        return 1 / (1 + np.exp(-z))
 
     def fit(self, X, Y):
         self.X = X
@@ -74,34 +73,54 @@ class MLP:
         num_classes = len(np.unique(Y))
         self.classifiers = []
 
+        num_layers = len(self.num_neurons)
+
+        # Initialize weights and biases for each layer
+        self.weights = []
+        self.biases = []
+
+        # Initialize weights and biases for the first layer
+        self.weights.append(np.random.randn(num_features, self.num_neurons[0]))
+        self.biases.append(np.zeros(self.num_neurons[0]))
+
+        # Initialize weights and biases for hidden layers and output layer
+        for i in range(1, num_layers):
+            self.weights.append(np.random.randn(self.num_neurons[i-1], self.num_neurons[i]))
+            self.biases.append(np.zeros(self.num_neurons[i]))
+
         for class_label in range(num_classes):
             binary_labels = np.where(self.Y == class_label, 1, 0)
 
-            self.weights = np.zeros((self.num_neurons, num_features))
-            self.bias = np.zeros(self.num_neurons)
-
-            for i in range(self.num_neurons):
+            for layer in range(num_layers):
                 for _ in range(self.num_iterations):
+                    # Forward pass
+                    layer_input = self.X if layer == 0 else predicts
                     predicts = self.sigmoid(
-                        np.dot(self.X, self.weights[i]) + self.bias[i])
+                        np.dot(layer_input, self.weights[layer]) + self.biases[layer])
 
-                    dw = (1 / num_samples) * \
-                        np.dot(self.X.T, (predicts - binary_labels))
+                    # Backpropagation
+                    print(predicts.shape , binary_labels.shape)
+                    if predicts.shape != binary_labels.shape:
+                        predicts = predicts.T
+                        
+                    dw = (1 / num_samples) * np.dot(layer_input.T, (predicts - binary_labels))
                     db = (1 / num_samples) * np.sum(predicts - binary_labels)
 
-                    self.weights[i] -= self.learning_rate * dw
-                    self.bias[i] -= self.learning_rate * db
+                    # Update weights and biases
+                    self.weights[layer] -= self.learning_rate * dw
+                    self.biases[layer] -= self.learning_rate * db
 
-            self.classifiers.append((self.weights, self.bias))
+            self.classifiers.append((self.weights, self.biases))
             log.info(self.classifiers)
 
     def predict(self, X):
         predictions = []
         for sample in X:
             class_scores = []
-            for self.weights, self.bias in self.classifiers:
-                score = np.dot(sample, self.weights) + self.bias
-                class_scores.append(score)
+            for layer_weights, layer_biases in self.classifiers:
+                for weights, bias in zip(layer_weights, layer_biases):
+                    score = np.dot(sample, weights) + bias
+                    class_scores.append(score)
             predicted_class = np.argmax(class_scores)
             predictions.append(predicted_class)
         return np.array(predictions)
