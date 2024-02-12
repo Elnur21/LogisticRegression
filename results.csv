@@ -1,0 +1,18 @@
+Dataset,Train Accuracy,Test Accuracy
+ArrowHead,91.67,72.57
+Wine,57.89,50.00
+FreezerSmallTrain,100.00,69.23
+OliveOil,43.33,40.00
+Car,95.00,80.00
+BeetleFly,100.00,80.00
+Yoga,68.33,62.53
+InlineSkate,71.00,26.91
+FaceAll,84.46,75.27
+EOGVerticalSignal,72.65,30.66
+Ham,95.41,74.29
+MoteStrain,100.00,86.42
+ProximalPhalanxTW,72.25,67.80
+WordSynonyms,68.91,41.38
+Lightning7,100.00,63.01
+GunPointOldVersusYoung,88.24,85.40
+Earthquakes,100.00,61.87
