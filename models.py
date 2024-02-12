@@ -24,7 +24,7 @@ class LogisticRegression:
         for class_label in range(num_classes):
             binary_labels = np.where(self.Y == class_label, 1, 0)
 
-            self.weights = np.zeros(num_features)
+            self.weights = np.random.randn(num_features)
             self.bias = 0
 
             for _ in range(self.num_iterations):
