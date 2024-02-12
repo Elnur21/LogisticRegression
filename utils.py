@@ -77,6 +77,31 @@ def plot(dataset, labels):
         print("Error")
 
 
+def plot_pie_chart(original_labels, predicted_labels, title):
+    original_counts = pd.DataFrame(original_labels).value_counts()
+    predicted_counts = pd.DataFrame(predicted_labels).value_counts()
+    labelsTrain = []
+    for i in set(original_labels):
+        labelsTrain.append(f"Class {i}")
+    labelsTest = []
+    for i in set(predicted_labels):
+        labelsTest.append(f"Class {i}")
+    # Plotting the pies
+    fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+
+
+    # Original Data Pie
+    ax[0].pie(original_counts, labels=labelsTrain, autopct='%1.1f%%', startangle=90)
+    ax[0].set_title('Original Data Classes')
+
+    # Predicted Data Pie
+    ax[1].pie(predicted_counts, labels=labelsTest, autopct='%1.1f%%', startangle=90)
+    ax[1].set_title('Predicted Data Classes')
+
+    fig.suptitle(title, fontsize=20)
+    # Display the plot
+    plt.show()
+
 def label_encoder(y):
     unique_labels = np.unique(y)
     label_map = {label: idx for idx, label in enumerate(unique_labels)}
@@ -88,11 +113,11 @@ class Log:
     def __init__(self) -> None:
         pass
 
-    def error(input):
+    def error(self,input):
         print(f"\033[91m {input} \033[00m")
     
-    def success(input):
+    def success(self,input):
         print(f"\033[92m {input} \033[00m")
 
-    def info(input):
+    def info(self,input):
         print(f"{input}")
