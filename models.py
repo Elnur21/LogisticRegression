@@ -5,9 +5,10 @@ log = Log()
 
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.01, num_iterations=1000):
+    def __init__(self, learning_rate=0.01, num_iterations=5000, batch_size=16):
         self.learning_rate = learning_rate
         self.num_iterations = num_iterations
+        self.batch_size=batch_size
         self.classifiers = []
 
     def sigmoid(self, z):
@@ -27,15 +28,16 @@ class LogisticRegression:
             self.bias = 0
 
             for _ in range(self.num_iterations):
-                predicts = self.sigmoid(
-                    np.dot(self.X, self.weights) + self.bias)
+                for i in range(0, num_samples, self.batch_size):
+                    predicts = self.sigmoid(
+                        np.dot(self.X[i:i+self.batch_size], self.weights) + self.bias)
 
-                dw = (1 / num_samples) * \
-                    np.dot(self.X.T, (predicts - binary_labels))
-                db = (1 / num_samples) * np.sum(predicts - binary_labels)
+                    dw = (1 / num_samples) * \
+                        np.dot(self.X[i:i+self.batch_size].T, (predicts - binary_labels[i:i+self.batch_size]))
+                    db = (1 / num_samples) * np.sum(predicts - binary_labels[i:i+self.batch_size])
 
-                self.weights -= self.learning_rate * dw
-                self.bias -= self.learning_rate * db
+                    self.weights -= self.learning_rate * dw
+                    self.bias -= self.learning_rate * db
 
             self.classifiers.append((self.weights, self.bias))
 
