@@ -102,6 +102,51 @@ def plot_pie_chart(original_labels, predicted_labels, title):
     # Display the plot
     plt.show()
 
+def plot_1v1_perf(res_df,column1,column2, acc_base=100, base_seed=4580, ref_seed=6528):
+    # Define the points for the diagonal line
+    x_line = [0, acc_base]
+    y_line = [0, acc_base]
+
+    # Define points for scatter plot
+    x_scatter = res_df[column1].tolist() 
+    y_scatter = res_df[column2].tolist() 
+
+    x_above = np.array([x for x, y in zip(x_scatter, y_scatter) if y > x])
+    y_above = np.array([y for x, y in zip(x_scatter, y_scatter) if y > x])
+
+    x_same = np.array([x for x, y in zip(x_scatter, y_scatter) if y == x])
+    y_same = np.array([y for x, y in zip(x_scatter, y_scatter) if y == x])
+
+    x_below = np.array([x for x, y in zip(x_scatter, y_scatter) if y < x])
+    y_below = np.array([y for x, y in zip(x_scatter, y_scatter) if y < x])
+
+    # Plot the diagonal line
+    plt.plot(x_line, y_line,  color='blue')
+    num_wins = res_df[res_df[column2] > res_df[column1]].shape[0]
+    num_ties = res_df[res_df[column2] == res_df[column1]].shape[0]
+    num_losses = res_df[res_df[column2] < res_df[column1]].shape[0]
+
+    # Plot the scatter points
+    plt.scatter(x_above, y_above, label='LogisticRegression Wins - ' + str(num_wins), color='red')
+    plt.scatter(x_same, y_same, label='Equal - ' + str(num_ties), color='orange')
+    plt.scatter(x_below, y_below, label=f'{column1} Wins - ' + str(num_losses), color='green')
+
+    # # Set axis limits
+    plt.xlim(0, acc_base)
+    plt.ylim(0, acc_base)
+
+    # Add labels and title
+    plt.xlabel(f'{column1} perf.')
+    plt.ylabel('LogisticRegression perf.')
+    plt.title(f'1 x 1 Performance Comparison - {column1} and "LogisticRegression" ')
+
+    # Add a legend
+    plt.legend()
+    plt.savefig("compare_results/"+ column1 + '_runs_10.png')
+    plt.close()
+    # Display the plot
+    # plt.show()
+
 def label_encoder(y):
     unique_labels = np.unique(y)
     label_map = {label: idx for idx, label in enumerate(unique_labels)}
